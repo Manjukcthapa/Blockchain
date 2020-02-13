@@ -3,7 +3,7 @@ import requests
 
 import sys
 import json
-
+DIFFICULTY = 6
 
 def proof_of_work(block):
     """
@@ -13,7 +13,10 @@ def proof_of_work(block):
     in an effort to find a number that is a valid proof
     :return: A valid proof for the provided block
     """
-    pass
+    block_string = json.dumps(block, sort_keys=True)
+    proof = 0
+    while self.valid_proof(block_string, proof) is False:
+    proof += 1
 
 
 def valid_proof(block_string, proof):
@@ -28,6 +31,10 @@ def valid_proof(block_string, proof):
     :return: True if the resulting hash is a valid proof, False otherwise
     """
     pass
+ guess = f'{block_string}{proof}'.encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+        # return True or False
+        return guess_hash[:DIFFICULTY] == '0' * DIFFICULTY
 
 
 if __name__ == '__main__':

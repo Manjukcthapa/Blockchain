@@ -7,7 +7,7 @@ from time import time
 from uuid import uuid4
 from flask import Flask, jsonify, request
 # hardcoded difficulty setting
-DIFFICULTY = 6
+
 class Blockchain(object):
     def __init__(self):
         self.chain = []
@@ -100,10 +100,10 @@ class Blockchain(object):
     #     correct number of leading zeroes.
     #     :return: True if the resulting hash is a valid proof, False otherwise
     #     """
-        guess = f'{block_string}{proof}'.encode()
-        guess_hash = hashlib.sha256(guess).hexdigest()
-        # return True or False
-        return guess_hash[:DIFFICULTY] == '0' * DIFFICULTY
+        # guess = f'{block_string}{proof}'.encode()
+        # guess_hash = hashlib.sha256(guess).hexdigest()
+        # # return True or False
+        # return guess_hash[:DIFFICULTY] == '0' * DIFFICULTY
 # Instantiate our Node
 app = Flask(__name__)
 # Generate a globally unique address for this node
@@ -126,7 +126,8 @@ def mine():
         # TODO: Send a JSON response with the new block
         "new_block": new_block
     }
-
+# Check that 'proof', and 'id' are present
+#if data is proof and id return response 200 else return error 400 (bad request)
     if (data["proof"] and data["id"]): 
         return jsonify(response), 200
     else:
