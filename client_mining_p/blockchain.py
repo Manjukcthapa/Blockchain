@@ -13,7 +13,7 @@ class Blockchain(object):
         self.chain = []
         self.current_transactions = []
         # Create the genesis block
-        self.new_block(previous_hash="I'm a teapot", proof=100)
+        self.new_block(previous_hash="1", proof=100)
     def new_block(self, proof, previous_hash=None):
         """
         Create a new Block in the Blockchain
@@ -40,6 +40,7 @@ class Blockchain(object):
         self.chain.append(block)
         # Return the new block
         return block
+
     def hash(self, block):
         """
         Creates a SHA-256 hash of a Block
@@ -69,6 +70,7 @@ class Blockchain(object):
         # easier to work with and understand
         # Return the hashed block string in hexadecimal format
         return hex_hash
+
     @property
     def last_block(self):
         return self.chain[-1]
@@ -88,7 +90,7 @@ class Blockchain(object):
 
     #     return proof
    
-    # @staticmethod
+    @staticmethod
     def valid_proof(block_string, proof):
     #     """
     #     Validates the Proof:  Does hash(block_string, proof) contain 3
@@ -100,10 +102,10 @@ class Blockchain(object):
     #     correct number of leading zeroes.
     #     :return: True if the resulting hash is a valid proof, False otherwise
     #     """
-        # guess = f'{block_string}{proof}'.encode()
-        # guess_hash = hashlib.sha256(guess).hexdigest()
-        # # return True or False
-        # return guess_hash[:DIFFICULTY] == '0' * DIFFICULTY
+        guess = f'{block_string}{proof}'.encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+
+        return guess_hash[:6] == "000000"
 # Instantiate our Node
 app = Flask(__name__)
 # Generate a globally unique address for this node
@@ -117,10 +119,11 @@ print(blockchain.hash(blockchain.last_block))
 def mine():
     
     # Run the proof of work algorithm to get the next proof
-    previous_hash = blockchain.hash(blockchain.last_block)
-    proof = blockchain.proof_of_work(blockchain.last_block)
+    # proof = blockchain.proof_of_work(blockchain.last_block)
+    data = request.get_json()
     # Forge the new Block by adding it to the chain with the proof
-    new_block = blockchain.new_block(proof, previous_hash)
+    previous_hash = blockchain.hash(blockchain.last_block)
+    new_block= blockchain.new_block(data["proof"], previous_hash)
 
     response = {
         # TODO: Send a JSON response with the new block
